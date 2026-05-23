@@ -62,6 +62,14 @@ namespace PitCrewCommon.Models
             }
         }
 
+        public string GrabNameOrDefault(string lang)
+        {
+            if (!LocalizedNames.ContainsKey(lang))
+                return LocalizedNames.First().Value;
+
+            return LocalizedNames[lang];
+        }
+
         public void Save(bool install = true)
         {
             FileUtil.CheckAndCreateFolder(Path.GetDirectoryName(Location));

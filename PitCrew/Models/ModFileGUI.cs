@@ -60,11 +60,13 @@ namespace PitCrew.Models
             //Check if any other mod is using this location.
             Mod? mod = BaseModel.ParentMod?.ParentInstance?.Mods.FirstOrDefault(mod =>
                     mod != BaseModel.ParentMod &&
-                    mod.ModFiles.Any(modFile => modFile.Location.Equals(Location)));
+                    mod.ModFiles.Any(modFile => Path.Equals(Path.GetFullPath(modFile.Location), Path.GetFullPath(Location))));
+
+            string currentLanguage = Service.Config.GetSetting(ConfigKey.Language);
 
             if (mod != null)
             {
-                Service.WindowManager.ShowDialogMainWindow(new MessageBoxViewModel(string.Format(Translatable.Get("filelist.already-in-use"), mod.Metadata.Name)));
+                Service.WindowManager.ShowDialogMainWindow(new MessageBoxViewModel(string.Format(Translatable.Get("filelist.already-in-use"), mod.Metadata.GrabNameOrDefault(currentLanguage))));
                 Location = PreviousLocation;
                 return;
             }
