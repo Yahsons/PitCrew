@@ -1,4 +1,20 @@
-<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:vm="using:PitCrew.ViewModels" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450" x:Class="PitCrew.Views.MainWindow" x:DataType="vm:MainWindowViewModel" xmlns:model="using:PitCrew.Models" Title="PitCrew" MinWidth="840" MinHeight="538" Width="1000" Height="538" WindowStartupLocation="CenterScreen">
+<Window xmlns="https://github.com/avaloniaui"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:vm="using:PitCrew.ViewModels"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		mc:Ignorable="d"
+		d:DesignWidth="800"
+		d:DesignHeight="450"
+		x:Class="PitCrew.Views.MainWindow"
+		x:DataType="vm:MainWindowViewModel"
+		xmlns:model="using:PitCrew.Models"
+		Title="PitCrew"
+		MinWidth="840"
+		MinHeight="538"
+		Width="{Binding UI.Width, Mode=TwoWay}"
+		Height="{Binding UI.Height, Mode=TwoWay}"
+		WindowStartupLocation="CenterScreen">
 	<Design.DataContext>
 		<!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->

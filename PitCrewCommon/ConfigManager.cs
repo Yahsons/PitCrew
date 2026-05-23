@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 
 namespace PitCrewCommon
 {
@@ -53,6 +52,12 @@ namespace PitCrewCommon
                                 .Elements("Setting")?
                                 .FirstOrDefault(at => at.Attribute("Name").Value.Equals(name));
 
+            if (setting == null)
+            {
+                setting = new XElement("Setting", new XAttribute("Name", name));
+                Properties.Root.Element("Settings")?.Add(setting);
+            }
+
             setting?.SetAttributeValue("Value", value);
 
             Properties.Save(fileName);
@@ -64,5 +69,7 @@ namespace PitCrewCommon
         public const string Language = "Lang";
         public const string Theme = "Theme";
         public const string LastOpenedPath = "LastOpenedPath";
+        public const string LastWindowWidth = "LastWindowWidth";
+        public const string LastWindowHeight = "LastWindowHeight";
     }
 }

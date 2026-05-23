@@ -71,6 +71,16 @@ namespace PitCrew.ViewModels
             if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
                 return;
 
+            //Get last width of window if it exists
+            string? num = Service.Config.GetSetting(ConfigKey.LastWindowWidth);
+            if (num != null && int.TryParse(num, out int width)) 
+                UI.Width = width;
+
+            //Get last height of window if it exists
+            num = Service.Config.GetSetting(ConfigKey.LastWindowHeight);
+            if (num != null && int.TryParse(num, out int height))
+                UI.Height = height;
+
             LoadedInstance = new InstanceGUI(new Instance(path), "");
             LoadInstance();
 
@@ -311,6 +321,8 @@ namespace PitCrew.ViewModels
             if (LoadedInstance == null)
                 return;
 
+            Service.Config.SetSetting(ConfigKey.LastWindowWidth, UI.Width.ToString());
+            Service.Config.SetSetting(ConfigKey.LastWindowHeight, UI.Height.ToString());
             LoadedInstance.SaveToXML();
         }
 
@@ -514,5 +526,11 @@ namespace PitCrew.ViewModels
         public bool windowClickable = true;
 
         public string Version => Constants.VERSION;
+
+        [ObservableProperty]
+        public int width = 1000;
+
+        [ObservableProperty]
+        public int height = 538;
     }
 }
