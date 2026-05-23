@@ -19,11 +19,14 @@ namespace PitCrew.ViewModels
         [ObservableProperty]
         public bool cancelVisible = false;
 
+        [ObservableProperty]
+        public bool okVisible = true;
+
         public ResultType Result { get; set; } = ResultType.None;
 
         public MessageBoxViewModel(string text, ButtonType type = ButtonType.Ok)
         {
-            Message = text.Replace("\\n", Environment.NewLine);
+            ChangeMessage(text);
 
             if (type == ButtonType.YesNo)
             {
@@ -33,6 +36,17 @@ namespace PitCrew.ViewModels
 
             if (type != ButtonType.Ok)
                 CancelVisible = true;
+
+            if (type == ButtonType.None)
+            {
+                CancelVisible = false;
+                OkVisible = false;
+            }
+        }
+
+        public void ChangeMessage(string text)
+        {
+            Message = text.Replace("\\n", Environment.NewLine);
         }
 
         public void Confirm()
@@ -73,7 +87,8 @@ namespace PitCrew.ViewModels
         {
             YesNo,
             Ok,
-            OkCancel
+            OkCancel,
+            None
         }
     }
 }
