@@ -62,11 +62,9 @@ namespace PitCrew.Models
                     mod != BaseModel.ParentMod &&
                     mod.ModFiles.Any(modFile => Path.Equals(Path.GetFullPath(modFile.Location), Path.GetFullPath(Location))));
 
-            string currentLanguage = Service.Config.GetSetting(ConfigKey.Language);
-
             if (mod != null)
             {
-                Service.WindowManager.ShowDialogMainWindow(new MessageBoxViewModel(string.Format(Translatable.Get("filelist.already-in-use"), mod.Metadata.GrabNameOrDefault(currentLanguage))));
+                Service.WindowManager.ShowDialogMainWindow(new MessageBoxViewModel(string.Format(Translatable.Get("filelist.already-in-use"), mod.Metadata.GrabNameOrDefault(Translatable.GetCurrentLanguage()))));
                 Location = PreviousLocation;
                 return;
             }

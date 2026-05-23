@@ -199,11 +199,9 @@ namespace PitCrew.ViewModels
 
             Metadata metadata = new Metadata(Path.Combine(metadataFolder, $"{mod.Id}.mdata"));
 
-            string currentLanguage = Service.Config.GetSetting(ConfigKey.Language);
-
             //Apply data to metadata
-            metadata.LocalizedNames[currentLanguage] = viewModel.Name;
-            metadata.LocalizedDescriptions[currentLanguage] = viewModel.Description;
+            metadata.LocalizedNames[Translatable.GetCurrentLanguage()] = viewModel.Name;
+            metadata.LocalizedDescriptions[Translatable.GetCurrentLanguage()] = viewModel.Description;
             metadata.Author = viewModel.Author;
             mod.Metadata = metadata;
 

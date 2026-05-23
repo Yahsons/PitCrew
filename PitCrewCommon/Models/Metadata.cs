@@ -81,14 +81,11 @@ namespace PitCrewCommon.Models
 
         private void GenerateDefaultIfNeeded()
         {
-            /*TODO this kinda sucks if your language isn't set to english, try and make it default lang of user's selection.
-                The edge case is that someone setup their mod with 2 languages before 1.64, then on correction it makes a default
-                for both english and the user's selected language.*/
             if (LocalizedNames.Count == 0)
-                LocalizedNames.Add(Constants.DEFAULT_LANG, Name);
+                LocalizedNames.Add(Translatable.GetCurrentLanguage(), Name);
 
             if (LocalizedDescriptions.Count == 0)
-                LocalizedDescriptions.Add(Constants.DEFAULT_LANG, Description);
+                LocalizedDescriptions.Add(Translatable.GetCurrentLanguage(), Description);
         }
 
         private XElement Generate(bool installed)

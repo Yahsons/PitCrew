@@ -33,15 +33,11 @@ namespace PitCrew.Models
         public ModGUI(Mod mod) : base(mod)
         {
             //Get Name and Description based on language, first in list if lang not found.
-            string language = Service.Config.GetSetting(ConfigKey.Language);
-
-            name = mod.Metadata.LocalizedNames.First().Value;
-            if (mod.Metadata.LocalizedNames.ContainsKey(language))
-                name = mod.Metadata.LocalizedNames[language];
+            name = mod.Metadata.GrabNameOrDefault(Translatable.GetCurrentLanguage());
 
             description = mod.Metadata.LocalizedDescriptions.First().Value;
-            if (mod.Metadata.LocalizedDescriptions.ContainsKey(language))
-                description = mod.Metadata.LocalizedDescriptions[language];
+            if (mod.Metadata.LocalizedDescriptions.ContainsKey(Translatable.GetCurrentLanguage()))
+                description = mod.Metadata.LocalizedDescriptions[Translatable.GetCurrentLanguage()];
 
             author = mod.Metadata.Author;
             Enabled = mod.Enabled;

@@ -52,16 +52,15 @@ namespace PitCrew
         {
             string originalLangName = Service.Config.GetSetting(ConfigKey.Language);
 
-            string newLangName = Translatable.Initialize($"{originalLangName}.json");
+            Translatable.Initialize($"{originalLangName}.json");
 			
 			//If language check failed make sure the config also fallbacks and not just the program.
-            if (newLangName != originalLangName)
-                Service.Config.SetSetting(ConfigKey.Language, newLangName);
+            Service.Config.SetSetting(ConfigKey.Language, Translatable.GetCurrentLanguage());
 
             Logger.EraseLog();
 
             //Right to left language support
-            if (CultureInfo.GetCultureInfo(newLangName).TextInfo.IsRightToLeft)
+            if (CultureInfo.GetCultureInfo(Translatable.GetCurrentLanguage()).TextInfo.IsRightToLeft)
                 AddRTLStyle();
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)

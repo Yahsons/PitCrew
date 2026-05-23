@@ -7,6 +7,8 @@ namespace PitCrewCommon
     {
         private static Dictionary<string, string> Translations { get; set; } = [];
 
+        private static string currentLangague = Constants.DEFAULT_LANG;
+
         public static string Initialize(string fileName)
         {
             string path = Path.Combine("Languages", fileName);
@@ -15,8 +17,9 @@ namespace PitCrewCommon
             if (!File.Exists(path) || !IsValidCulture(langName))
                 langName = Constants.DEFAULT_LANG;
 
-            Load(Path.ChangeExtension(langName, ".json"));
-            return langName;
+            currentLangague = langName;
+            Load(Path.ChangeExtension(currentLangague, ".json"));
+            return currentLangague;
         }
 
         public static void Load(string fileName)
@@ -33,6 +36,7 @@ namespace PitCrewCommon
             try
             {
                 Translations = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+                currentLangague = Path.GetFileNameWithoutExtension(fileName);
             }
             catch (JsonException e)
             {
@@ -47,6 +51,11 @@ namespace PitCrewCommon
 
             //Missing translation
             return key;
+        }
+
+        public static string GetCurrentLanguage()
+        {
+            return currentLangague;
         }
 
         public static bool IsValidCulture(string langName)
