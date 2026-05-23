@@ -7,13 +7,12 @@
 	
 	<Window.Styles>
 		<Style Selector="Button">
-			<Setter Property="MinWidth" Value="0"/>
-			<Setter Property="Height" Value="60"/>
+			<Setter Property="MinHeight" Value="60"/>
 		</Style>
 	</Window.Styles>
 	
 	<Grid IsHitTestVisible="{Binding UI.WindowClickable}">
-		<TextBlock Text="{Binding UI.Version}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5"/>
+		<TextBlock Text="{Binding UI.Version}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5" ZIndex="1"/>
 		
 		<DockPanel LastChildFill="False">
 			<Menu DockPanel.Dock="Top" Classes="rtl">
@@ -49,13 +48,14 @@
 			</Menu>
 		</DockPanel>
 		
-		<Grid>
+		<Grid Margin="10,0">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="0.6*"/>
+				<ColumnDefinition Width="Auto"/>
 				<ColumnDefinition Width="0.4*"/>
 			</Grid.ColumnDefinitions>
 
-			<ListBox Name="ModGUIList" Grid.Column="0" Margin="10,50,0,10" BorderBrush="{Binding UI.ModListBorderColor}" BorderThickness="1" DragDrop.AllowDrop="True"
+			<ListBox Name="ModGUIList" Grid.Column="0" Margin="0,50,0,10" BorderBrush="{Binding UI.ModListBorderColor}" BorderThickness="1" DragDrop.AllowDrop="True"
 			ItemsSource="{Binding LoadedInstance.ModsGUI}" SelectedItem="{Binding LoadedMod, Mode=TwoWay}" SelectionMode="Multiple" SelectedItems="{Binding SelectedMods, Mode=TwoWay}">
 				<ListBox.ContextMenu>
 					<ContextMenu>
@@ -78,36 +78,45 @@
 					<FilesDropBehavior Command="{Binding ListBox.ImportModDragDrop}"/>
 				</Interaction.Behaviors>
 			</ListBox>
+
+			<GridSplitter Grid.Column="1" Margin="0,35,0,0" Width="20" Background="Transparent" ResizeDirection="Columns" />
 			
-			<Grid Grid.RowSpan="3" Grid.Column="1">
+			<Grid Grid.RowSpan="3" Grid.Column="2">	
 				<Grid.RowDefinitions>
-					<RowDefinition Height="60*"/>
-					<RowDefinition Height="20*"/>
-					<RowDefinition Height="20*"/>
+					<RowDefinition Height="0.6*"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="0.2*"/>
+					<RowDefinition Height="0.2*" MaxHeight="100" MinHeight="100"/>
 				</Grid.RowDefinitions>
 				
-				<DataGrid Name="FileList" VerticalAlignment="Stretch" Grid.Row="0" Grid.Column="1" Margin="20,50" Classes="rtl" BorderBrush="Gray" BorderThickness="1" ItemsSource="{Binding LoadedMod.ModFilesGUI}" AutoGenerateColumns="False">
+				<DataGrid Name="FileList" VerticalAlignment="Stretch" Grid.Row="0" Margin="0,50,20,0" Classes="rtl" BorderBrush="Gray" BorderThickness="1"
+						  ItemsSource="{Binding LoadedMod.ModFilesGUI}" AutoGenerateColumns="False" DragDrop.AllowDrop="True">
 					<DataGrid.Columns>
 						<DataGridTextColumn Header="{Binding Source='filelist.filepath', Converter={StaticResource Translatable}}" Binding="{Binding Location, Mode=TwoWay, UpdateSourceTrigger=Explicit}" Width="8*"/>
 						<DataGridTextColumn Header="{Binding Source='filelist.priority', Converter={StaticResource Translatable}}" Binding="{Binding Priority, Mode=TwoWay, UpdateSourceTrigger=Explicit}"/>
 					</DataGrid.Columns>
+
+					<Interaction.Behaviors>
+						<FilesDropBehavior Command="{Binding ImportModFiles}"/>
+					</Interaction.Behaviors>
 				</DataGrid>
-				
+
+				<GridSplitter Grid.Row="1" Height="20" Margin="0,0,20,0" Background="Transparent" ResizeDirection="Rows" ResizeBehavior="BasedOnAlignment" VerticalAlignment="Stretch"/>
+
 				<!--Why does text block not have the same border controls is beyond me.-->
-				<Border Grid.Row="1" BorderBrush="Gray" BorderThickness="2" Margin="20,-30,20,0">
-					<TextBlock Name="ConflictBox" Text="{Binding UI.ConflictBoxText}" VerticalAlignment="Stretch" TextWrapping="Wrap" Classes="rtl"/>
+				<Border Grid.Row="2" BorderBrush="Gray" VerticalAlignment="Stretch" BorderThickness="2" Margin="0,0,20,0">
+					<TextBlock Name="ConflictBox" Text="{Binding UI.ConflictBoxText}" TextWrapping="Wrap" Classes="rtl"/>
 				</Border>
-				
-				<Grid Grid.Row="2" ColumnDefinitions="Auto,*" HorizontalAlignment="Stretch">
-					<StackPanel Grid.Column="0" Orientation="Vertical" Spacing="5" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0">
-						<RepeatButton Name="MoveModUp" Content="∧" FontSize="20" Height="30" MinWidth="40" BorderThickness="1" Padding="0,0,0,2" Background="Transparent" Delay="200" Interval="200" Command="{Binding ListBox.MoveModUp}"/>
-						<RepeatButton Name="MoveModDown" Content="∨" FontSize="20" Height="30" MinWidth="40" BorderThickness="1" Padding="0,0,0,2" Background="Transparent" Delay="200" Interval="200" Command="{Binding ListBox.MoveModDown}"/>
+
+				<Grid Grid.Row="3" ColumnSpacing="20" ColumnDefinitions="0.03*,0.05*,0.1*" Margin="0,10,0,30" VerticalAlignment="Stretch">
+						
+					<StackPanel Grid.Column="0" Orientation="Vertical" Spacing="5" HorizontalAlignment="Left" VerticalAlignment="Center">
+						<RepeatButton Name="MoveModUp" Content="∧" Height="30" MinWidth="40" BorderThickness="1" Padding="0,0,0,2" Background="Transparent" Delay="200" Interval="200" Command="{Binding ListBox.MoveModUp}"/>
+						<RepeatButton Name="MoveModDown" Content="∨" Height="30" MinWidth="40" BorderThickness="1" Padding="0,0,0,2" Background="Transparent" Delay="200" Interval="200" Command="{Binding ListBox.MoveModDown}"/>
 					</StackPanel>
-					
-					<StackPanel Grid.Column="1" HorizontalAlignment="Center" Orientation="Horizontal" Spacing="50" Margin="-30,0,0,0">
-						<Button Name="SaveButton" Content="{Binding Source='button.save', Converter={StaticResource Translatable}}" Command="{Binding Save}"/>
-						<Button Name="CompileButton" Content="{Binding Source='button.compile', Converter={StaticResource Translatable}}" Command="{Binding Compile}"/>
-					</StackPanel>
+
+					<Button Grid.Column="1" Name="SaveButton" HorizontalAlignment="Center" Content="{Binding Source='button.save', Converter={StaticResource Translatable}}" Command="{Binding Save}"/>
+					<Button Grid.Column="2" Name="CompileButton" HorizontalAlignment="Center" Margin="0,0,50,0" Content="{Binding Source='button.compile', Converter={StaticResource Translatable}}" Command="{Binding Compile}"/>
 				</Grid>
 				
 			</Grid>

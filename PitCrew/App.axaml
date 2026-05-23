@@ -17,12 +17,19 @@
             <Setter Property="BorderThickness" Value="2" />
             <Setter Property="FontFamily" Value="Segoe UI" />
             <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="FontSize" Value="21.66" />
-            <Setter Property="MinWidth" Value="164" />
+			<Setter Property="FontSize" Value="21.66" />
+            <Setter Property="MinWidth" Value="80" />
             <Setter Property="MinHeight" Value="20" />
-            <Setter Property="Height" Value="45" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="HorizontalContentAlignment" Value="Center" />
+			<!--This is to let text scale with the button, useful for muiltiple languages-->
+			<Setter Property="ContentTemplate">
+				<DataTemplate>
+					<Viewbox Stretch="Uniform">
+						<TextBlock Text="{Binding}" />
+					</Viewbox>
+				</DataTemplate>
+			</Setter>
         </Style>
     </Application.Styles>
 

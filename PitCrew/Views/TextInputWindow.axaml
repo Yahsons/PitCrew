@@ -15,7 +15,7 @@
     <StackPanel VerticalAlignment="Center" Margin="10" Spacing="10">
         <TextBlock Name="InputText" Text="{Binding Source='instances.textinput.header', Converter={StaticResource Translatable}}" Classes="rtlm" />
         <TextBox Name="Input" Height="30" Text="{Binding TextBox, Mode=TwoWay}" Classes="rtl"/>
-        <Button Name="SubmitButton" Content="{Binding Source='button.ok', Converter={StaticResource Translatable}}" IsDefault="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" Command="{Binding Submit}" />
+        <Button Name="SubmitButton" Content="{Binding Source='button.ok', Converter={StaticResource Translatable}}" Width="110" Height="50" IsDefault="True" HorizontalAlignment="Right" VerticalAlignment="Bottom" Command="{Binding Submit}" />
     </StackPanel>
 
 </Window>
