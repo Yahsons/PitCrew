@@ -26,6 +26,8 @@ namespace PitCrew.ViewModels
             if (MainWindow.LoadedMod == null)
                 return;
 
+            MainWindow.Save();
+
             string baseDirectory = MainWindow.LoadedInstance.BaseModel.GetDirectory();
             string modId = MainWindow.LoadedMod.BaseModel.Id;
             Metadata metadata = MainWindow.LoadedMod.BaseModel.Metadata;
