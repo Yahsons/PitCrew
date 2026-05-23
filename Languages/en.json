@@ -30,6 +30,7 @@
 	
 	"files.unpack": "Unpacking, please wait...",
 	"files.pack": "Packing files, please wait...",
+	"files.not-in-game-folder": "File was not inside data_win32 folder.",
     
     "conflictbox.default": "Add your game inside the Instances tab.\nDouble click the game in the list to select it.",
     "conflictbox.no-mods": "Add your mods by dragging and dropping the zip files into the blue highlighted box.\nOr by clicking Mods -> Import",

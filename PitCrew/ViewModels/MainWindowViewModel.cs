@@ -355,11 +355,18 @@ namespace PitCrew.ViewModels
 
         public async void ImportModFiles(IEnumerable<IStorageItem> items)
         {
+            if (LoadedMod == null)
+                return;
+
             string folderLocation = Path.GetDirectoryName(LoadedInstance.Location);
+            //This is here specifically to counter someone putting in both .fat and .dat, we just need one.
+            HashSet<string> uniqueFiles = [];
 
             foreach (var item in items)
             {
                 string path = item.Path.LocalPath;
+                if (Path.GetExtension(path).Equals(".fat") || Path.GetExtension(path).Equals(".dat"))
+                    path = Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path));
 
                 if (!ManifestUtil.IsValidFile(path))
                 {
@@ -371,10 +378,15 @@ namespace PitCrew.ViewModels
 
                 //We only want relative files related to the game's data_win32, if it's rooted, it means it wasn't in the game folder.
                 if (Path.IsPathRooted(path))
+                {
+                    await Service.WindowManager.ShowDialog(this, new MessageBoxViewModel(Translatable.Get("files.not-in-game-folder")));
+                    continue;
+                }
+
+                if (uniqueFiles.Contains(path))
                     continue;
 
-                if (Path.GetExtension(path).Equals(".fat") || Path.GetExtension(path).Equals(".dat"))
-                    path = Path.ChangeExtension(path, "");
+                uniqueFiles.Add(path);
 
                 Metadata? existingMetadata = LoadedMod.InsertFile(new ModFileGUI(new ModFile(LoadedMod.BaseModel, path, 998)));
 
