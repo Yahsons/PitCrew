@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Markup.Xaml.Styling;
+using Avalonia.Platform.Storage;
 using Avalonia.Styling;
 using CommunityToolkit.Mvvm.ComponentModel;
 using PitCrew.Models;
@@ -332,6 +333,36 @@ namespace PitCrew.ViewModels
             UI.WindowClickable = true;
 
             await Service.WindowManager.ShowDialog(this, new MessageBoxViewModel(Translatable.Get("compiler.success")));
+        }
+
+        public async void ImportModFiles(IEnumerable<IStorageItem> items)
+        {
+            string folderLocation = Path.GetDirectoryName(LoadedInstance.Location);
+
+            foreach (var item in items)
+            {
+                string path = item.Path.LocalPath;
+
+                if (!ManifestUtil.IsValidFile(path))
+                {
+                    await Service.WindowManager.ShowDialog(this, new MessageBoxViewModel(Translatable.Get("importmod.invalid-extension")));
+                    continue;
+                }
+
+                path = Path.GetRelativePath(folderLocation, path);
+
+                //We only want relative files related to the game's data_win32, if it's rooted, it means it wasn't in the game folder.
+                if (Path.IsPathRooted(path))
+                    continue;
+
+                if (Path.GetExtension(path).Equals(".fat") || Path.GetExtension(path).Equals(".dat"))
+                    path = Path.ChangeExtension(path, "");
+
+                Metadata? existingMetadata = LoadedMod.InsertFile(new ModFileGUI(new ModFile(LoadedMod.BaseModel, path, 998)));
+
+                if (existingMetadata != null)
+                    Service.WindowManager.ShowDialog(this, new MessageBoxViewModel(string.Format(Translatable.Get("filelist.already-in-use"), existingMetadata.GrabNameOrDefault(Translatable.GetCurrentLanguage()))));
+            }
         }
 
         public void BigFileWindow(string pack)

@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using PitCrew.Systems;
 using PitCrewCommon;
 using PitCrewCommon.Models;
 using System;
@@ -50,8 +49,40 @@ namespace PitCrew.Models
             }));
 
             var file = new ModFileGUI(new ModFile(BaseModel, "", 0));
-            file.PropertyChanged += ModFileChanged;
-            ModFilesGUI.Add(file);
+            AddFile(file);
+        }
+
+        public void AddFile(ModFileGUI modFile)
+        {
+            modFile.PropertyChanged += ModFileChanged;
+            ModFilesGUI.Add(modFile);
+        }
+
+        public Metadata? InsertFile(ModFileGUI insertedModFile)
+        {
+            insertedModFile.PropertyChanged += ModFileChanged;
+
+            Mod? mod = BaseModel?.ParentInstance?.Mods.FirstOrDefault(mod => mod.ModFiles.Any(modFile => Path.Equals(Path.GetFullPath(modFile.Location), Path.GetFullPath(insertedModFile.Location))));
+
+            if (mod != null)
+                return mod.Metadata;
+
+            ModFilesGUI.Insert(ModFilesGUI.Count - 1, insertedModFile);
+            return null;
+        }
+
+        public void SaveToBase()
+        {
+            List<ModFile> files = [];
+
+            foreach (ModFileGUI file in ModFilesGUI)
+            {
+                if (file.Priority == 0)
+                    continue;
+
+                files.Add(new ModFile(this.BaseModel, file.Location, file.Priority));
+            }
+            BaseModel.ModFiles = files;
         }
 
         protected override void OnPropertyChanged(PropertyChangedEventArgs e)
@@ -59,7 +90,7 @@ namespace PitCrew.Models
             base.OnPropertyChanged(e);
 
             //Apply localization specific name and description
-            string language = Service.Config.GetSetting(ConfigKey.Language);
+            string language = Translatable.GetCurrentLanguage();
 
             if (e.PropertyName == nameof(Name))
             {
@@ -97,23 +128,8 @@ namespace PitCrew.Models
             if (ReferenceEquals(modFile, ModFilesGUI.Last()))
             {
                 var file = new ModFileGUI(new ModFile(BaseModel, "", 0));
-                file.PropertyChanged += ModFileChanged;
-                ModFilesGUI.Add(file);
+                AddFile(file);
             }
-        }
-
-        public void SaveToBase()
-        {
-            List<ModFile> files = [];
-
-            foreach (ModFileGUI file in ModFilesGUI)
-            {
-                if (file.Priority == 0)
-                    continue;
-
-                files.Add(new ModFile(this.BaseModel, file.Location, file.Priority));
-            }
-            BaseModel.ModFiles = files;
         }
 
         private List<ulong> GetAllHashes(string location)
