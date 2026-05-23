@@ -11,9 +11,9 @@ namespace PitCrewUpdater
         public static void Main(string[] args)
         {
             ConfigManager config = new ConfigManager();
-            string langName = Translatable.Initialize(config.GetSetting(ConfigKey.Language) + ".json");
+            Translatable.Initialize(config.GetSetting(ConfigKey.Language) + ".json");
             //legacy stuff, force updating language files
-            config.SetSetting(ConfigKey.Language, langName);
+            config.SetSetting(ConfigKey.Language, Translatable.GetCurrentLanguage());
 
             SetupOnClose();
 

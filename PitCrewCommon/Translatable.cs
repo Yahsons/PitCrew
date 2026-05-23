@@ -9,7 +9,7 @@ namespace PitCrewCommon
 
         private static string currentLangague = Constants.DEFAULT_LANG;
 
-        public static string Initialize(string fileName)
+        public static void Initialize(string fileName)
         {
             string path = Path.Combine("Languages", fileName);
             string langName = Path.GetFileNameWithoutExtension(fileName);
@@ -19,7 +19,6 @@ namespace PitCrewCommon
 
             currentLangague = langName;
             Load(Path.ChangeExtension(currentLangague, ".json"));
-            return currentLangague;
         }
 
         public static void Load(string fileName)
