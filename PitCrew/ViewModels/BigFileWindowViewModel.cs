@@ -3,6 +3,7 @@ using PitCrew.Models;
 using PitCrew.Systems;
 using PitCrewCommon;
 using PitCrewCommon.Utilities;
+using System.Threading.Tasks;
 
 namespace PitCrew.ViewModels
 {
@@ -71,9 +72,14 @@ namespace PitCrew.ViewModels
             if (string.IsNullOrWhiteSpace(FileText) || string.IsNullOrWhiteSpace(FolderText))
                 return;
 
+            MessageBoxViewModel waitPrompt = new MessageBoxViewModel(Translatable.Get("files.pack"), MessageBoxViewModel.ButtonType.None);
+
             if (Pack)
             {
-                BigFileUtil.RepackBigFile(FolderText, FileText, AuthorText, PackageVersion, Compression);
+                Service.WindowManager.ShowDialog(this, waitPrompt);
+                await Task.Run(() => BigFileUtil.RepackBigFile(FolderText, FileText, AuthorText, PackageVersion, Compression));
+                Service.WindowManager.CloseWindow(waitPrompt);
+
                 await Service.WindowManager.ShowDialog(this, new MessageBoxViewModel(string.Format(Translatable.Get("bigfile.pack-success"), FileText)));
                 return;
             }
@@ -82,7 +88,11 @@ namespace PitCrew.ViewModels
             if (Instance != null)
                 baseGameDirectory = FileUtil.GetParentDir(Instance.BaseModel.GetDirectory());
 
-            BigFileUtil.UnpackBigFile(FileText, FolderText, PackageVersion, baseGameDirectory);
+            waitPrompt.ChangeMessage(Translatable.Get("files.unpack"));
+            Service.WindowManager.ShowDialog(this, waitPrompt);
+            await Task.Run(() => BigFileUtil.UnpackBigFile(FileText, FolderText, PackageVersion, baseGameDirectory));
+            Service.WindowManager.CloseWindow(waitPrompt);
+
             await Service.WindowManager.ShowDialog(this, new MessageBoxViewModel(string.Format(Translatable.Get("bigfile.unpack-success"), FolderText)));
         }
     }

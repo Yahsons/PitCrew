@@ -69,6 +69,9 @@ namespace PitCrew.Systems
 
         public void CloseWindow(ViewModelBase viewModel)
         {
+            //This is here so a window can only be closed by the program and not the user.
+            viewModel.UnlockWindow();
+
             Window? window = GetParentWindow(viewModel);
             if (window == null)
                 return;

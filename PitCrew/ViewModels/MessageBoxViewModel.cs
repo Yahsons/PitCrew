@@ -41,6 +41,7 @@ namespace PitCrew.ViewModels
             {
                 CancelVisible = false;
                 OkVisible = false;
+                LockClosure = true;
             }
         }
 

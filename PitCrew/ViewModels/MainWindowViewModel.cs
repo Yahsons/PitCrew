@@ -246,18 +246,23 @@ namespace PitCrew.ViewModels
 
             files ??= [path];
 
+            MessageBoxViewModel unpackWait = new MessageBoxViewModel(Translatable.Get("files.unpack"), MessageBoxViewModel.ButtonType.None);
+
             string zipTempFolder = "!PitCrewZipTempFolder";
 
             //If a zip was given, extract it to a temporary folder first then run as if it was mdata.
             if (Path.GetExtension(path).Equals(".zip"))
             {
-                ZipFile.ExtractToDirectory(path, zipTempFolder, true);
+                Service.WindowManager.ShowDialog(this, unpackWait);
+
+                await Task.Run(() => ZipFile.ExtractToDirectory(path, zipTempFolder, true));
 
                 files = Directory.GetFiles(zipTempFolder, "*.mdata");
                 if (files.Length == 0)
                 {
                     await Service.WindowManager.ShowDialog(this, new MessageBoxViewModel(Translatable.Get("importmod.invalid-zip")));
                     FileUtil.CheckAndDeleteFolder(zipTempFolder);
+                    Service.WindowManager.CloseWindow(unpackWait);
                     return;
                 }
             }
@@ -296,6 +301,7 @@ namespace PitCrew.ViewModels
             if (LoadedMod == null)
                 UI.ConflictBoxText = Translatable.Get("conflictbox.no-conflicts");
 
+            Service.WindowManager.CloseWindow(unpackWait);
             FileUtil.CheckAndDeleteFolder(zipTempFolder);
             Save();
         }
