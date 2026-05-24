@@ -39,7 +39,7 @@
             <TextBox Text="{Binding Id}" IsEnabled="{Binding IdTextBoxEnabled}" />
             <TextBox Text="{Binding Name}" Classes="rtl"/>
             <TextBox Text="{Binding Author}" Classes="rtl"/>
-            <TextBox Name="DescriptionTextbox" Width="250" MinHeight="60" TextWrapping="Wrap" Text="{Binding Description}" Classes="rtl"/>
+            <TextBox Name="DescriptionTextbox" Width="250" MinHeight="60" TextWrapping="Wrap" Text="{Binding Description}" Classes="rtl" AcceptsReturn="true"/>
         </StackPanel>
     </Grid>
 
